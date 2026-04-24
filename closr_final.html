@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Closr</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0808;--bg2:#110e0e;--bg3:#1a1414;--rose:#c9747a;--rose-light:#e8a0a5;--rose-dim:#6b3a3d;--gold:#c9a96e;--text:#f0e8e8;--text2:#a89090;--text3:#6b5252;--border:rgba(201,116,122,0.15);--border2:rgba(201,116,122,0.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(201,116,122,0.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(201,169,110,0.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+.app{max-width:520px;margin:0 auto;padding:2rem 1.5rem 4rem;position:relative;z-index:1;min-height:100vh}
+.screen{display:none}.screen.active{display:block}
+.screen.enter{animation:fu .45s cubic-bezier(.22,1,.36,1) forwards}
+.screen.exit{animation:fd .25s ease-in forwards}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fd{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-14px)}}
+@keyframes spinIn{0%{opacity:0;transform:rotate(6deg) scale(.9)}100%{opacity:1;transform:rotate(0) scale(1)}}
+.logo{font-size:11px;font-weight:400;letter-spacing:.28em;color:var(--text3);text-transform:uppercase;margin-bottom:2.5rem;display:flex;align-items:center;gap:.75rem}
+.logo::after{content:'';flex:1;height:.5px;background:var(--border)}
+.home-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:.5rem}
+.home-title em{font-style:italic;color:var(--rose-light)}
+.home-sub{font-size:14px;color:var(--text2);margin-bottom:2rem;line-height:1.7;font-weight:300}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.fc{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1.5rem 1.25rem;cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
+.fc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,116,122,0.08),transparent 70%);opacity:0;transition:opacity .3s}
+.fc:hover{border-color:var(--border2);transform:translateY(-2px)}.fc:hover::before{opacity:1}
+.fc-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:.875rem;background:rgba(201,116,122,0.08);border:.5px solid var(--border);font-size:15px}
+.fc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:.3rem;letter-spacing:.01em}
+.fc-sub{font-size:12px;color:var(--text3);line-height:1.5}
+.ql{font-size:11px;font-weight:400;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.5rem}
+.qt{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--text);margin-bottom:1.25rem;line-height:1.4}
+.btnp{background:var(--rose);color:#0a0808;border:none;border-radius:4px;padding:.875rem 1.5rem;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;width:100%;margin-top:.5rem;transition:all .2s;letter-spacing:.1em;text-transform:uppercase}
+.btnp:hover{background:var(--rose-light);transform:translateY(-1px)}.btnp:disabled{opacity:.25;cursor:default;transform:none}
+.btng{background:transparent;border:.5px solid var(--border);border-radius:4px;padding:.75rem 1.25rem;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text3);cursor:pointer;width:100%;margin-top:.5rem;letter-spacing:.1em;text-transform:uppercase;transition:all .2s}
+.btng:hover{border-color:var(--border2);color:var(--text2)}
+.spin-btn{background:transparent;border:.5px solid var(--rose-dim);border-radius:4px;padding:1.125rem;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--rose-light);cursor:pointer;width:100%;margin-bottom:.75rem;transition:all .25s;letter-spacing:.15em;text-transform:uppercase;position:relative;overflow:hidden}
+.spin-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(201,116,122,0.12),transparent);background-size:200% 100%;animation:shimmer 2.5s infinite}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+.spin-btn:hover{background:rgba(201,116,122,0.08);border-color:var(--rose)}
+.card{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:.75rem}
+.tag{display:inline-block;font-size:10px;font-weight:400;padding:3px 10px;border-radius:99px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.875rem;border:.5px solid var(--rose-dim);color:var(--rose-light);background:rgba(201,116,122,0.06)}
+.sil-wrap{background:var(--bg3);border:.5px solid var(--border);border-radius:6px;padding:1.5rem;text-align:center;margin-bottom:1.25rem}
+.pos-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--text);margin-bottom:.25rem}
+.pos-meta{font-size:10px;color:var(--text3);margin-bottom:1.25rem;letter-spacing:.15em;text-transform:uppercase}
+.pos-sec{font-size:10px;font-weight:500;color:var(--rose);letter-spacing:.2em;text-transform:uppercase;margin:.875rem 0 .4rem}
+.pos-txt{font-size:14px;color:var(--text2);line-height:1.7;font-weight:300}
+.mood-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem}
+.mood-opt{background:transparent;border:.5px solid var(--border);border-radius:4px;padding:.875rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.875rem;transition:all .2s}
+.mood-opt:hover{border-color:var(--border2);background:rgba(201,116,122,0.04)}
+.mood-opt.sel{border-color:var(--rose);background:rgba(201,116,122,0.08)}
+.mood-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mood-lbl{font-size:14px;color:var(--text);font-weight:400}
+.mood-slbl{font-size:11px;color:var(--text3);margin-top:1px}
+.act-card{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:.75rem}
+.act-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:.875rem}
+.steps{list-style:none;padding:0}
+.steps li{display:flex;gap:12px;margin-bottom:.7rem;font-size:14px;color:var(--text2);line-height:1.6;font-weight:300}
+.sn{font-size:10px;color:var(--text3);min-width:16px;margin-top:3px;letter-spacing:.06em}
+.guide-tabs{display:flex;gap:.5rem;margin-bottom:1.25rem}
+.gtab{flex:1;padding:.75rem;border:.5px solid var(--border);border-radius:4px;font-size:11px;font-family:'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;background:transparent;color:var(--text3);transition:all .2s}
+.gtab.act{border-color:var(--rose);color:var(--rose-light);background:rgba(201,116,122,0.08)}
+.gi{border:.5px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:.5rem;cursor:pointer;transition:all .2s}
+.gi:hover{border-color:var(--border2);background:var(--bg2)}
+.gi-t{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--text);margin-bottom:.25rem}
+.gi-s{font-size:12px;color:var(--text3)}
+.gd{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:.75rem}
+.gd-t{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:.25rem}
+.zone-chip{display:inline-block;background:rgba(201,116,122,0.06);border:.5px solid var(--border);border-radius:99px;padding:3px 10px;font-size:11px;color:var(--text2);margin:3px;letter-spacing:.04em}
+.tip-box{border-left:1px solid var(--rose-dim);padding:.875rem 1rem;margin-top:1rem;background:rgba(201,116,122,0.04);border-radius:0 4px 4px 0}
+.tip-lbl{font-size:10px;color:var(--rose);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.35rem}
+.tip-txt{font-size:13px;color:var(--text2);line-height:1.6;font-style:italic;font-weight:300}
+.scen-opt{background:transparent;border:.5px solid var(--border);border-radius:4px;padding:.875rem 1rem;font-size:14px;color:var(--text2);cursor:pointer;text-align:left;width:100%;display:block;margin-bottom:.5rem;transition:all .2s;line-height:1.5;font-family:'DM Sans',sans-serif;font-weight:300}
+.scen-opt:hover{border-color:var(--border2);color:var(--text);background:rgba(201,116,122,0.04)}
+.scen-opt.sel{border-color:var(--rose);color:var(--rose-light);background:rgba(201,116,122,0.08)}
+.script-box{border-left:1px solid var(--rose-dim);padding:1rem 1.25rem;margin-bottom:.75rem;background:rgba(201,116,122,0.04);border-radius:0 4px 4px 0}
+.script-lbl{font-size:10px;color:var(--rose);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.4rem}
+.script-txt{font-size:14px;color:var(--text);line-height:1.7;font-style:italic;font-weight:300}
+.ib{border:.5px solid var(--border);border-radius:4px;padding:1rem;margin-bottom:.5rem}
+.it{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:.35rem}
+.ix{font-size:14px;color:var(--text2);line-height:1.6;font-weight:300}
+.nav-row{display:flex;gap:.5rem;margin-top:.5rem}
+.nav-row .btng,.nav-row .btnp{margin-top:0}
+.hint{font-size:12px;color:var(--text3);text-align:center;margin-top:.75rem;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="logo">Closr</div>
+
+<div class="screen active" id="s0">
+  <p class="home-title">Your private<br><em>space.</em></p>
+  <p class="home-sub">Four tools for deeper connection. No account. No questions. Just pick what you need.</p>
+  <div class="feature-grid">
+    <div class="fc" onclick="go(1)"><div class="fc-icon">🎲</div><div class="fc-title">Position decider</div><div class="fc-sub">Spin for a random position with guide</div></div>
+    <div class="fc" onclick="go(2)"><div class="fc-icon">🌶</div><div class="fc-title">Activity decider</div><div class="fc-sub">Mood-based bedroom activities</div></div>
+    <div class="fc" onclick="go(4)"><div class="fc-icon">✦</div><div class="fc-title">Pleasure guide</div><div class="fc-sub">How to please him or her</div></div>
+    <div class="fc" onclick="go(6)"><div class="fc-icon">◇</div><div class="fc-title">Conversation bridge</div><div class="fc-sub">Scripts for hard talks</div></div>
+  </div>
+</div>
+
+<div class="screen" id="s1">
+  <p class="logo">Position decider</p>
+  <button class="spin-btn" onclick="spinPos()">✦ &nbsp;Spin a position</button>
+  <div id="pos-out"></div>
+  <button class="btng" onclick="go(0)">Back to home</button>
+</div>
+
+<div class="screen" id="s2">
+  <p class="logo">Activity decider</p>
+  <p class="qt">What is the mood tonight?</p>
+  <div class="mood-list">
+    <div class="mood-opt" onclick="selMood(this,'tender')"><div class="mood-dot" style="background:#5DCAA5"></div><div><div class="mood-lbl">Tender</div><div class="mood-slbl">Slow, soft, emotional</div></div></div>
+    <div class="mood-opt" onclick="selMood(this,'playful')"><div class="mood-dot" style="background:#EF9F27"></div><div><div class="mood-lbl">Playful</div><div class="mood-slbl">Fun, light, curious</div></div></div>
+    <div class="mood-opt" onclick="selMood(this,'sensual')"><div class="mood-dot" style="background:#ED93B1"></div><div><div class="mood-lbl">Sensual</div><div class="mood-slbl">Slow burn, body-focused</div></div></div>
+    <div class="mood-opt" onclick="selMood(this,'adventurous')"><div class="mood-dot" style="background:#F0997B"></div><div><div class="mood-lbl">Adventurous</div><div class="mood-slbl">Try something new</div></div></div>
+    <div class="mood-opt" onclick="selMood(this,'intense')"><div class="mood-dot" style="background:#D4537E"></div><div><div class="mood-lbl">Intense</div><div class="mood-slbl">High energy, wild</div></div></div>
+  </div>
+  <button class="btnp" id="btn-mood" onclick="showAct()" disabled>Show tonight's activity</button>
+  <button class="btng" onclick="go(0)">Back</button>
+</div>
+
+<div class="screen" id="s3">
+  <p class="logo">Tonight's activity</p>
+  <div id="act-out"></div>
+  <p class="hint">Not feeling this one? Go back and pick a different mood.</p>
+  <div class="nav-row" style="margin-top:1rem">
+    <button class="btng" onclick="go(2)">Try another mood</button>
+    <button class="btnp" style="margin-top:0" onclick="go(0)">Home</button>
+  </div>
+</div>
+
+<div class="screen" id="s4">
+  <p class="logo">Pleasure guide</p>
+  <div class="guide-tabs">
+    <button class="gtab act" id="tab-him" onclick="switchGuide('him')">Pleasing him</button>
+    <button class="gtab" id="tab-her" onclick="switchGuide('her')">Pleasing her</button>
+  </div>
+  <div id="guide-list"></div>
+  <button class="btng" onclick="go(0)">Back to home</button>
+</div>
+
+<div class="screen" id="s5">
+  <p class="logo">Pleasure guide</p>
+  <div id="gd-out"></div>
+  <div class="nav-row">
+    <button class="btng" onclick="go(4)">Back to guide</button>
+    <button class="btnp" style="margin-top:0" onclick="go(0)">Home</button>
+  </div>
+</div>
+
+<div class="screen" id="s6">
+  <p class="logo">Conversation bridge</p>
+  <p class="qt">What do you need help with?</p>
+  <button class="scen-opt" onclick="selScen(this,'pace')">We want different things physically right now</button>
+  <button class="scen-opt" onclick="selScen(this,'initiate')">I want to bring something up but do not know how</button>
+  <button class="scen-opt" onclick="selScen(this,'feedback')">I want to share what I like without hurting them</button>
+  <button class="scen-opt" onclick="selScen(this,'distance')">We have been feeling distant lately</button>
+  <button class="scen-opt" onclick="selScen(this,'rejected')">I feel rejected when my partner says no</button>
+  <button class="scen-opt" onclick="selScen(this,'pressure')">I feel pressure to say yes when I do not want to</button>
+  <button class="scen-opt" onclick="selScen(this,'desire')">I want more intimacy but do not know how to say it</button>
+  <button class="scen-opt" onclick="selScen(this,'jealousy')">I have been feeling jealous or insecure</button>
+  <button class="scen-opt" onclick="selScen(this,'boredom')">I want us to try new things but am nervous to ask</button>
+  <button class="scen-opt" onclick="selScen(this,'afterfight')">We just had a fight and I want to reconnect</button>
+  <button class="btnp" id="btn-scen" onclick="showBridge()" disabled style="margin-top:.75rem">Show me what to say</button>
+  <button class="btng" onclick="go(0)">Back</button>
+</div>
+
+<div class="screen" id="s7">
+  <p class="logo">Conversation bridge</p>
+  <div id="bridge-out"></div>
+  <div class="nav-row">
+    <button class="btng" onclick="go(6)">Try another</button>
+    <button class="btnp" style="margin-top:0" onclick="go(0)">Home</button>
+  </div>
+</div>
+</div>
+
+<script>
+const AC=new (window.AudioContext||window.webkitAudioContext)();
+function tone(f,t,d,v,dl=0){const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(0,AC.currentTime+dl);g.gain.linearRampToValueAtTime(v,AC.currentTime+dl+0.02);g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dl+d);o.start(AC.currentTime+dl);o.stop(AC.currentTime+dl+d+0.05);}
+function playNav(){tone(220,'sine',.4,.03);tone(330,'sine',.3,.025,.1);tone(440,'sine',.2,.02,.2);}
+function playClick(){tone(600,'sine',.1,.04);tone(800,'sine',.08,.025,.05);}
+function playSpin(){for(let i=0;i<6;i++)tone(200+i*80,'sine',.15,.035,i*.07);tone(880,'sine',.4,.04,.5);tone(660,'sine',.3,.035,.65);}
+function playReveal(){tone(330,'sine',.5,.035);tone(440,'sine',.4,.03,.15);tone(550,'sine',.3,.025,.3);tone(660,'sine',.5,.035,.45);}
+
+let mood=null,scen=null,guideTab='him',lastPos=-1,lastAct={};
+
+function go(n){
+  if(AC.state==='suspended')AC.resume();
+  playNav();
+  const cur=document.querySelector('.screen.active');
+  if(cur){cur.classList.add('exit');setTimeout(()=>{cur.classList.remove('active','exit');show(n);},240);}
+  else show(n);
+}
+function show(n){const s=document.getElementById('s'+n);s.classList.add('active','enter');setTimeout(()=>s.classList.remove('enter'),500);}
+
+const P='#c9747a',PD='#6b3a3d';
+function sv(d){return `<svg viewBox="0 0 220 160" width="190" height="138" xmlns="http://www.w3.org/2000/svg">${d}</svg>`;}
+
+const positions=[
+  {name:'Missionary',diff:'Beginner',tag:'Intimate · Classic',svg:sv(`<circle cx="100" cy="36" r="18" fill="${P}" opacity=".7"/><rect x="82" y="54" width="36" height="56" rx="10" fill="${P}" opacity=".7"/><line x1="90" y1="110" x2="80" y2="148" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="110" y1="110" x2="120" y2="148" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><circle cx="148" cy="74" r="17" fill="${PD}" opacity=".9"/><rect x="131" y="91" width="34" height="50" rx="10" fill="${PD}" opacity=".9"/>`),benefit:'Maximum eye contact and emotional closeness. Best position for kissing throughout.',instructions:'Receiving partner lies on back, legs relaxed. Entering partner aligns on top. Support weight with arms. Pillow under lower back adjusts the angle.',context:'Emotional nights, beginners, reconnecting.'},
+  {name:'Doggy style',diff:'Intermediate',tag:'Deep · Intense',svg:sv(`<circle cx="52" cy="46" r="17" fill="${PD}" opacity=".9"/><rect x="35" y="63" width="34" height="55" rx="10" fill="${PD}" opacity=".9"/><line x1="40" y1="118" x2="26" y2="150" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><line x1="68" y1="118" x2="82" y2="150" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><circle cx="158" cy="48" r="17" fill="${P}" opacity=".7"/><rect x="141" y="65" width="34" height="55" rx="10" fill="${P}" opacity=".7"/><line x1="148" y1="102" x2="130" y2="128" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="168" y1="102" x2="186" y2="128" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/>`),benefit:'Deepest penetration angle. Full hands-free access to the body.',instructions:'Receiving partner on all fours, back flat. Entering partner kneels behind. Hands on hips. Angle hips slightly down for comfort.',context:'High energy nights, intensity, depth.'},
+  {name:'Cowgirl',diff:'Intermediate',tag:'Her in control',svg:sv(`<circle cx="100" cy="24" r="17" fill="${P}" opacity=".7"/><rect x="83" y="41" width="34" height="50" rx="10" fill="${P}" opacity=".7"/><line x1="89" y1="91" x2="74" y2="124" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="111" y1="91" x2="126" y2="124" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><ellipse cx="100" cy="104" rx="22" ry="14" fill="${PD}" opacity=".9"/><rect x="78" y="117" width="44" height="38" rx="10" fill="${PD}" opacity=".9"/>`),benefit:'She fully controls depth, angle, and pace. Ideal for her pleasure.',instructions:'He lies flat. She straddles facing him, sits upright or leans forward. She drives all movement.',context:'When she wants full control.'},
+  {name:'Spooning',diff:'Beginner',tag:'Gentle · Warm',svg:sv(`<circle cx="60" cy="50" r="17" fill="${P}" opacity=".7"/><rect x="43" y="67" width="34" height="58" rx="17" fill="${P}" opacity=".7"/><circle cx="84" cy="58" r="17" fill="${PD}" opacity=".9"/><rect x="67" y="75" width="34" height="58" rx="17" fill="${PD}" opacity=".9"/>`),benefit:'Deeply intimate, low effort. Perfect for emotional closeness.',instructions:'Both lie on sides, same direction. Back partner enters from behind. Use bottom arm to hold partner close.',context:'Lazy mornings, emotional reconnection.'},
+  {name:'Lotus',diff:'Advanced',tag:'Full body contact',svg:sv(`<circle cx="100" cy="38" r="18" fill="${P}" opacity=".7"/><ellipse cx="100" cy="78" rx="20" ry="28" fill="${P}" opacity=".55"/><circle cx="100" cy="116" r="16" fill="${PD}" opacity=".9"/><ellipse cx="100" cy="98" rx="28" ry="22" fill="${PD}" opacity=".75"/>`),benefit:'Maximum full-body closeness with continuous eye contact and embrace.',instructions:'Partner sits cross-legged. Other sits on lap facing them, legs wrapped around. Both hold each other. Slow rocking, not thrusting.',context:'Tantric, deeply emotional sessions.'},
+  {name:'Edge of bed',diff:'Intermediate',tag:'Standing · Novel',svg:sv(`<rect x="20" y="106" width="180" height="15" rx="4" fill="#1a1414"/><circle cx="70" cy="58" r="17" fill="${PD}" opacity=".9"/><rect x="53" y="75" width="34" height="31" rx="6" fill="${PD}" opacity=".9"/><line x1="58" y1="106" x2="44" y2="145" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><line x1="84" y1="106" x2="98" y2="145" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><circle cx="150" cy="36" r="17" fill="${P}" opacity=".7"/><rect x="133" y="53" width="34" height="60" rx="8" fill="${P}" opacity=".7"/><line x1="139" y1="113" x2="122" y2="150" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="163" y1="113" x2="180" y2="150" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/>`),benefit:'Fresh angle, no joint strain. Easy standing access.',instructions:'Receiving partner lies at bed edge, hips at edge, legs raised. Entering partner stands. Hold legs for support.',context:'Variety without complexity.'},
+  {name:'Reverse cowgirl',diff:'Intermediate',tag:'Her pace · New view',svg:sv(`<circle cx="100" cy="24" r="17" fill="${P}" opacity=".7"/><rect x="83" y="41" width="34" height="52" rx="10" fill="${P}" opacity=".7"/><line x1="89" y1="93" x2="72" y2="126" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="111" y1="93" x2="128" y2="126" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><ellipse cx="100" cy="110" rx="22" ry="13" fill="${PD}" opacity=".9"/><rect x="78" y="122" width="44" height="34" rx="10" fill="${PD}" opacity=".9"/>`),benefit:'She controls angle and depth. Different sensation and view for both.',instructions:'He lies back. She straddles facing his feet. Lean slightly forward, control pace.',context:'Control from a different angle.'},
+  {name:'Standing',diff:'Advanced',tag:'Spontaneous',svg:sv(`<circle cx="80" cy="16" r="17" fill="${PD}" opacity=".9"/><rect x="63" y="33" width="34" height="100" rx="10" fill="${PD}" opacity=".9"/><circle cx="122" cy="16" r="17" fill="${P}" opacity=".7"/><rect x="105" y="33" width="34" height="100" rx="10" fill="${P}" opacity=".7"/>`),benefit:'Exciting change of dynamic. Works against a wall.',instructions:'Both stand facing each other or one faces the wall. Adjust height with a step or bent knees.',context:'Spontaneous moments, shower.'},
+  {name:'Seated lap',diff:'Intermediate',tag:'Face to face · Seated',svg:sv(`<rect x="60" y="108" width="100" height="30" rx="6" fill="#1a1414"/><circle cx="100" cy="86" r="17" fill="${PD}" opacity=".9"/><rect x="83" y="103" width="34" height="30" rx="8" fill="${PD}" opacity=".9"/><circle cx="100" cy="38" r="17" fill="${P}" opacity=".7"/><rect x="83" y="55" width="34" height="50" rx="10" fill="${P}" opacity=".7"/>`),benefit:'Intimate face-to-face contact. Great for kissing and closeness.',instructions:'One partner sits on chair or bed edge. Other straddles facing them. Hold each other close and rock.',context:'Intimate sessions, novelty with connection.'},
+  {name:'Butterfly',diff:'Intermediate',tag:'Deep · Her pleasure',svg:sv(`<rect x="20" y="104" width="180" height="15" rx="4" fill="#1a1414"/><circle cx="76" cy="56" r="17" fill="${PD}" opacity=".9"/><rect x="59" y="73" width="34" height="31" rx="6" fill="${PD}" opacity=".9"/><line x1="64" y1="104" x2="48" y2="148" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><line x1="90" y1="104" x2="106" y2="148" stroke="${PD}" stroke-width="7" stroke-linecap="round" opacity=".9"/><circle cx="150" cy="33" r="17" fill="${P}" opacity=".7"/><rect x="133" y="50" width="34" height="60" rx="8" fill="${P}" opacity=".7"/><line x1="139" y1="110" x2="120" y2="150" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/><line x1="163" y1="110" x2="182" y2="150" stroke="${P}" stroke-width="7" stroke-linecap="round" opacity=".7"/>`),benefit:'Elevated hips create ideal angle for her pleasure. Deep and powerful.',instructions:'She lies at bed edge, hips raised on pillow. He stands and lifts her legs to his shoulders.',context:'High intensity, maximum depth with comfort.'},
+  {name:'Prone bone',diff:'Intermediate',tag:'Deep · Tight',svg:sv(`<circle cx="100" cy="28" r="17" fill="${PD}" opacity=".9"/><rect x="83" y="45" width="34" height="92" rx="10" fill="${PD}" opacity=".75"/><circle cx="110" cy="24" r="15" fill="${P}" opacity=".6"/><rect x="93" y="39" width="34" height="90" rx="10" fill="${P}" opacity=".45"/>`),benefit:'Extremely tight sensation. Intense for both partners.',instructions:'Receiving partner lies face down, legs together. Entering partner lies on top. Slow deep movement works best.',context:'High intensity variation.'},
+  {name:'Cradle',diff:'Beginner',tag:'Slow · Full contact',svg:sv(`<circle cx="100" cy="36" r="18" fill="${P}" opacity=".7"/><rect x="82" y="54" width="36" height="55" rx="10" fill="${P}" opacity=".7"/><circle cx="148" cy="70" r="17" fill="${PD}" opacity=".9"/><rect x="131" y="87" width="34" height="48" rx="10" fill="${PD}" opacity=".9"/>`),benefit:'Full body contact variation of missionary. Deeply warm and intimate.',instructions:'Standard missionary but she wraps legs fully around his waist and pulls him close. Full body contact throughout.',context:'Deep emotional moments, slow connection.'},
+  {name:'Scissor',diff:'Intermediate',tag:'Equal · Rhythmic',svg:sv(`<circle cx="68" cy="38" r="17" fill="${P}" opacity=".7"/><rect x="51" y="55" width="34" height="82" rx="10" fill="${P}" opacity=".6"/><circle cx="142" cy="78" r="17" fill="${PD}" opacity=".9"/><rect x="125" y="95" width="34" height="50" rx="10" fill="${PD}" opacity=".8"/>`),benefit:'Both on sides at an angle. Low effort with intimate grinding sensation.',instructions:'Both lie on sides at 45-90 degrees to each other with legs interlocked. Grind and rock rather than thrust.',context:'Equal energy, long slow sessions.'},
+  {name:'Wheelbarrow',diff:'Expert',tag:'Athletic · Bold',svg:sv(`<circle cx="58" cy="48" r="17" fill="${PD}" opacity=".9"/><rect x="41" y="65" width="34" height="42" rx="8" fill="${PD}" opacity=".9"/><line x1="48" y1="107" x2="28" y2="142" stroke="${PD}" stroke-width="8" stroke-linecap="round" opacity=".9"/><line x1="72" y1="107" x2="92" y2="142" stroke="${PD}" stroke-width="8" stroke-linecap="round" opacity=".9"/><circle cx="152" cy="36" r="17" fill="${P}" opacity=".7"/><rect x="135" y="53" width="34" height="56" rx="8" fill="${P}" opacity=".7"/>`),benefit:'Full control and very deep sensation. Memorable for adventurous couples.',instructions:'Receiving partner starts on all fours. Entering partner stands and lifts their legs from behind at the hip.',context:'When both have energy and want something bold.'},
+  {name:'Chair straddle',diff:'Beginner',tag:'Seated · Playful',svg:sv(`<rect x="55" y="106" width="110" height="32" rx="6" fill="#1a1414"/><circle cx="100" cy="84" r="17" fill="${PD}" opacity=".9"/><rect x="83" y="101" width="34" height="30" rx="8" fill="${PD}" opacity=".9"/><circle cx="100" cy="36" r="17" fill="${P}" opacity=".7"/><rect x="83" y="53" width="34" height="50" rx="10" fill="${P}" opacity=".7"/>`),benefit:'Playful and visual. She controls pace and depth.',instructions:'He sits in a sturdy chair. She straddles facing him and controls all movement.',context:'Playful sessions, novelty and visual connection.'}
+];
+
+const activities={
+  tender:[
+    {title:'The ice trail',steps:['Prepare a glass of ice by the bed before you begin.','Start with slow kissing and unhurried touch to warm the body.','Take one ice cube and trace it slowly along the collarbone, neck, and shoulders.','Follow the cold trail immediately with warm lips and slow breath.','Switch — your partner traces ice on your body, follows with lips.','Stay slow and present. Let the contrast be the entire experience.']},
+    {title:'Whisper appreciation',steps:['Lie together in near-dark, facing each other.','Take turns saying one thing you love about the other — physical or otherwise.','No rushing, no jokes. Stay completely sincere.','After each one, pause for 30 seconds of silence.','Do this for 10 rounds each.','End with holding each other in complete silence for 5 minutes.']},
+    {title:'Slow massage ritual',steps:['One partner lies down completely relaxed. Use oil if available.','The other takes 15 full minutes to massage — starting with shoulders and back.','No goal. No expectation. Just presence and care.','Switch after 15 minutes.','Stay silent or speak only softly. No phones, no music with lyrics.','Let whatever happens next emerge naturally.']}
+  ],
+  playful:[
+    {title:'Truth or dare — bedroom edition',steps:['Take turns: one person calls "truth" or "dare."','Truth: answer honestly — "what is one thing you have wanted to try but never said?"','Dare: a small consensual physical challenge — a specific kiss, touch, or request.','No pressure — "pass" is always available without judgment.','Keep it light. Laughter and discovery, not pressure.','Play for 20 minutes or until you are ready to move further.']},
+    {title:'The 60-second rule',steps:['Set a timer for 60 seconds.','For those 60 seconds, one partner does whatever they want — anything consensual.','When the timer ends, switch immediately.','Alternate for 8 rounds total.','The constraint creates focus and playful urgency.','After 8 rounds, follow whatever energy has built.']},
+    {title:'Soundtrack game',steps:['Each partner picks 3 songs representing a mood they want tonight.','Play them alternately — 6 songs total.','Your only job is to match the energy of whatever song is playing.','No planning what comes next. Just respond to the music.','The contrast between songs creates natural variety.','After all 6, decide together where the night goes.']}
+  ],
+  sensual:[
+    {title:'Blindfold and sensation',steps:['One partner wears a blindfold — agree on this clearly first.','The other uses hands, lips, fabric, or a feather to explore slowly.','Focus on unexpected places — inner arm, behind the knees, lower back.','The blindfolded partner focuses only on sensation, not anticipation.','After 10 minutes, switch if both want to.','The build is the entire point — do not rush past it.']},
+    {title:'Temperature play',steps:['Prepare: one glass of ice water and one mug of warm water.','Use fingers warmed in warm water, then cooled in ice water.','Trace slowly across the skin — back, arms, inner thighs, stomach.','Follow each temperature shift with lips and breath.','Alternate temperature and location unpredictably.','The unpredictability itself creates the sensation.']},
+    {title:'The slow undress ritual',steps:['Agree: the undressing takes at least 15 minutes. No rushing.','One partner slowly removes one item of clothing from the other.','After each item, pause and give full attention to what has been revealed.','Switch and repeat.','Make every moment of the reveal feel intentional and appreciated.','This is entirely about presence and making the other feel deeply wanted.']}
+  ],
+  adventurous:[
+    {title:'The yes list exchange',steps:['Each person writes 5 things they want to try — any category.','Fold the paper and exchange without speaking.','Read privately. Respond with "yes," "maybe someday," or "not for me" only.','Circle one "yes" from each person\'s list together.','Try one tonight. The others wait for future nights.','Debrief after: what surprised you about what your partner wrote?']},
+    {title:'Role swap night',steps:['Tonight, one person takes the lead role they do not normally take.','If you usually initiate, your partner initiates everything.','If you usually direct, you follow entirely.','The person in the unfamiliar role does not break character or defer back.','This reveals what your partner actually wants when free to ask.','Debrief afterward: what did you discover?']},
+    {title:'New location challenge',steps:['The bedroom is off limits tonight.','Pick a different room — living room floor, balcony if private, kitchen counter.','The novelty of location changes chemistry even with no other change.','Bring a blanket and one prop of your choice.','No phones, no TV.','You cannot go to the bedroom until you are completely finished.']}
+  ],
+  intense:[
+    {title:'No hands — body and breath only',steps:['Both partners keep hands at their sides for the first 10 minutes.','Everything is lips, body weight, and breath only.','Start with kissing, then explore entirely without hands.','Notice how sensation amplifies when you remove the most obvious tool.','After 10 minutes, hands release — the contrast is striking.','Builds full-body awareness unlike almost anything else.']},
+    {title:'Dominant and surrendered',steps:['Agree clearly on who is leading and who is surrendering tonight.','The surrendered partner does not initiate anything — only responds and receives.','The leading partner takes full responsibility with full care.','Agreed stop words apply at any moment.','This is about trust, not power.','Switch roles on another night to complete the experience.']},
+    {title:'The edge game',steps:['The goal: bring your partner to the edge, then stop. Three times.','Use touch and movement to build intensity fully.','At the peak of each build, stop completely for 60 seconds.','Resume from a lower intensity and build again.','Repeat three times before the end.','The final release after three builds is significantly more intense — this is the entire point.']}
+  ]
+};
+
+const guides={
+  him:[
+    {title:'Erogenous zones — his full map',sub:'Where sensation is highest and most overlooked',zones:['Neck and ears','Inner thighs','Lower abdomen','Behind the knees','Scalp','Lower back','Wrists'],body:'Men receive attention almost exclusively in one obvious area. The neck, ears, and inner thighs are densely nerve-rich and almost always overlooked. The scalp responds intensely to slow pressure. Starting there, spending real time there, changes everything that follows.',tip:'Spend the first 5 full minutes only on non-genital zones. Do not move on until he is clearly responding.'},
+    {title:'Touch and pressure',sub:'How to use your hands most effectively',zones:['Vary firm and light','Use fingernails lightly','Warm hands first','Slow circular motion'],body:'Speed is the most common mistake. Slow, deliberate touch with varying pressure is far more effective than fast repetition. Alternating between firm and barely-there touch creates contrast that keeps sensation sharp rather than dulled.',tip:'Ask simply: "harder or softer?" once. It opens communication without making the moment clinical.'},
+    {title:'Pacing and the buildup arc',sub:'How to create an experience rather than an event',zones:['Slow start','Build then withdraw','Vary intensity','Hold back the peak'],body:'A longer, slower build creates a significantly more intense experience. Introduce sensation, then withdraw it. Return with more. The arc matters enormously — the valley makes the peak.',tip:'Stop completely when he is close. Wait 30 full seconds. Resume from lower intensity. The difference in what follows is significant every time.'},
+    {title:'Reading his body',sub:'What his responses tell you',zones:['Breathing rhythm','Muscle tension','Involuntary movement','Sound and silence'],body:'His breathing tells you everything: shallow and fast means keep going, held breath means you have found something, long exhale means he is releasing into it. Muscle tension in the thighs is one of the clearest signals.',tip:'When you find something that produces a clear response — stay there longer than you think you should.'},
+    {title:'Communication and direction',sub:'How to invite him to guide you',zones:['Short direct questions','Invite him to show you','Positive reinforcement','Ask after'],body:'A simple "like this?" asked once changes guessing into collaboration. It invites him to be present rather than passive. Positive reinforcement in the moment builds confidence over time.',tip:'After intimacy, ask: "was there anything you especially loved tonight?" Make it a ritual.'},
+    {title:'Presence and pacing',sub:'Why slowing down creates more intensity',zones:['Pause intentionally','Full eye contact','Stay present mentally','Breathe together'],body:'Intentional pauses — stopping movement completely, holding eye contact, breathing together — create more sensation than sustained activity. The nervous system resets and re-sensitizes during pauses.',tip:'If you feel the urge to speed up, slow down instead. This consistently produces stronger responses.'},
+    {title:'After intimacy',sub:'What happens in the first 10 minutes matters',zones:['Stay close','No phone','Speak softly','Physical warmth'],body:'The period immediately after intimacy is one of the most psychologically significant moments. Defenses are down, the bond is at its strongest. How you behave here communicates more than almost anything else.',tip:'Stay physically close for at least 10 minutes after. No phones. Just presence. It costs nothing and communicates everything.'},
+    {title:'Making him feel desired',sub:'How to make him feel deeply wanted',zones:['Initiate sometimes','Be direct','Eye contact during','Say what you want'],body:'Men rarely receive explicit verbal expressions of desire. Being told directly that he is wanted — not implied, but said clearly — has a stronger effect than most physical techniques.',tip:'Tell him directly what you want. Directness reads as confidence, and confidence amplifies desire on both sides.'}
+  ],
+  her:[
+    {title:'Erogenous zones — her full map',sub:'Where sensation is highest across her whole body',zones:['Neck and ears','Inner thighs','Lower back','Behind the knees','Scalp and hair','Lower abdomen','Wrists','Small of back'],body:'Her body is broadly sensitive in ways most partners never fully explore. The neck, scalp, lower back, and inner thighs matter as much as more obvious areas. Beginning with these zones and spending real time there changes her arousal pattern completely.',tip:'Map her entire body with attention before any direct touch. Every person\'s map is genuinely different — explore, do not assume.'},
+    {title:'Clitoral awareness',sub:'The most sensitive structure in the human body',zones:['External hood','Indirect stimulation','Side approach','Vary rhythm','Lubrication essential'],body:'The clitoris contains over 8,000 nerve endings. Most of its architecture is internal. Direct pressure is often too intense early. Approaching from the side, circling, and varying rhythm are consistently more effective than direct fast stimulation.',tip:'Ask "where feels best?" or let her hand guide yours. This single question is the biggest differentiator in her experience.'},
+    {title:'Internal sensation and G-zone',sub:'What it is and how to find it',zones:['2-3 inches inside, front wall','Ridged texture','Firm upward pressure','Build slowly','Combine with external'],body:'The G-zone sits on the anterior wall of the vagina, roughly 2-3 inches in, with a slightly ridged texture. It responds to firm, consistent upward pressure — not speed. Combining internal and external stimulation creates a significantly different experience.',tip:'Approach only after she is already highly aroused. Early stimulation before adequate arousal often produces discomfort rather than pleasure.'},
+    {title:'Touch, pace, and presence',sub:'The three things that matter most',zones:['Full body first','Build slowly','Stay present','Never rush'],body:'For most women, arousal begins in the mind and body simultaneously. Being fully present — eye contact, staying connected, not rushing — dramatically affects her experience. Distraction is felt immediately.',tip:'Slow down every time you feel the urge to accelerate. The patience communicates care more powerfully than any technique.'},
+    {title:'Oral intimacy — approach and technique',sub:'How to approach this with skill and care',zones:['Build slowly before','Vary tongue pressure','Consistency at peak','Read breathing','Use hands simultaneously'],body:'The approach matters as much as the technique. Rushing to direct stimulation before she is fully aroused produces very different results. Find what is producing the clearest signal and stay there — consistency at peak response is more important than variety.',tip:'When her breathing changes distinctly — shorter, held, or faster — stay exactly where you are. Do not change anything.'},
+    {title:'Reading her responses',sub:'What her body tells you',zones:['Breathing pattern','Hip movement','Muscle tension','Vocal response','Her hands'],body:'Her hips moving toward you mean keep going. Moving away means too much. Her hands guiding you are the clearest signal — follow them without hesitation. Muscle tension in the thighs means intensity is accumulating.',tip:'Remove the pressure of guessing by simply asking once, gently: "like this?" One question turns guessing into partnership.'},
+    {title:'Communication — creating safety',sub:'How to build openness where she guides you',zones:['No defensive reactions','Ask then listen','Thank her for directing','Make it a ritual'],body:'Most women have never been explicitly asked what they want during intimacy. Creating a safe space where any redirection is welcomed — not defended against — opens everything over time. How you respond the first time she redirects you determines whether she ever does it again.',tip:'When she guides you: do exactly what she asked, immediately and without comment. Just follow, and she will guide you more.'},
+    {title:'After intimacy — what she needs',sub:'The first 10 minutes after matters enormously',zones:['Stay physically close','Verbal affirmation','Do not withdraw','Be present'],body:'Oxytocin is highest immediately after intimacy. Withdrawal registers acutely. Staying close, saying something specific and sincere, and simply being present communicates she is valued beyond the act.',tip:'Say one specific thing you noticed or loved about her tonight. Not generic — specific. It lands completely differently.'}
+  ]
+};
+
+const bridges={
+  pace:{sit:'Mismatched physical needs',ctx:'One of the most common and least spoken tensions. The goal is understanding, not winning.',open:'"I have been thinking about something and I want us to talk about it without it becoming a big deal. Is now a good time?"',core:'"I feel like we might be in different places about how often we connect physically. I am not saying something is wrong — I just want to understand where you are, and share where I am."',tip:'Use "I notice" not "you never." Accusation closes the conversation instantly.',when:'A calm neutral moment — not right after a rejection, not late at night.'},
+  initiate:{sit:'Bringing something up',ctx:'Most things stay unsaid because of fear of reaction, not lack of desire to share.',open:'"There is something I have been wanting to share. I want you to know it is not a complaint — I just want us to be closer."',core:'"Can I tell you something I have been thinking about? I would love your reaction after, but first I just want to say it without either of us needing to fix it right away."',tip:'Ask for listening, not solving. Problem-solving mode closes the conversation before it opens.',when:'When neither of you is tired, rushed, or mid-conflict.'},
+  feedback:{sit:'Sharing what you like',ctx:'Positive guidance lands better than correction. Lead with desire.',open:'"I want to tell you something because it will bring us closer — and it is genuinely a good thing."',core:'"I have realized I really love it when you do [specific thing]. It makes me feel [feeling]. I want more of that between us."',tip:'Be specific and positive first. If you want less of something, sandwich it: love, redirect, reassurance.',when:'Not during or after intimacy. A relaxed ordinary moment works best.'},
+  distance:{sit:'Feeling emotionally distant',ctx:'Distance is rarely intentional. Usually both feel it but neither names it first.',open:'"I miss you. Not dramatically — I just feel like we have been on autopilot and I want to change that."',core:'"I am not blaming either of us. Life gets busy. But I want to feel close to you again. Can we do something this week that is just for us?"',tip:'One simple ask for reconnection is more powerful than ten complaints.',when:'Any calm moment. The sooner the better — distance compounds.'},
+  rejected:{sit:'Feeling rejected after a no',ctx:'Most "no" answers are about state and energy, not about you.',open:'"Can I share something honestly? I want to understand it before I just sit quietly with it."',core:'"When you said no the other night, I know logically it was not about me — but I still felt rejected. I just wanted to name it and hear what was going on for you."',tip:'"I felt" is completely different from "you made me feel."',when:'At least a full day after the moment. Let it settle first.'},
+  pressure:{sit:'Feeling pressure to say yes',ctx:'Consent is ongoing. Feeling unable to say no freely deserves a direct conversation.',open:'"I want to talk about something that matters to me. I need you to hear it without getting defensive."',core:'"Sometimes I say yes when I do not fully mean it because I worry about your reaction. I want us to build a space where no always feels completely safe."',tip:'This needs its own real moment. Not a side comment.',when:'A calm, sober, private moment. Proactively — not after an incident.'},
+  desire:{sit:'Wanting more intimacy overall',ctx:'Expressing desire clearly is one of the most vulnerable things in a relationship.',open:'"Can I tell you something I have been sitting with? It feels vulnerable to say but I think it is important."',core:'"I want more intimacy between us — not because something is wrong, but because I miss feeling that close to you. I want to figure out together what has shifted."',tip:'Frame it as wanting more of something good, not a complaint about a deficit.',when:'A calm evening when neither of you is stressed. Not after a conflict.'},
+  jealousy:{sit:'Navigating jealousy',ctx:'Jealousy is almost always about fear, not reality. Name the fear underneath.',open:'"I want to talk about something I have been feeling and I want to be honest rather than let it quietly affect us."',core:'"When [specific situation] happened, I felt insecure. I know it probably did not mean what my mind went to — but I wanted to name it instead of carrying it."',tip:'Name the feeling, not the accusation. "I felt insecure" is a completely different conversation.',when:'After you have had time to process privately. Not in the heat of the emotion.'},
+  boredom:{sit:'Wanting to try something new',ctx:'Expressing that you want variety is an invitation to grow together, not a criticism.',open:'"I have been thinking about us and I want to share something I think could be really good for both of us."',core:'"I feel like we have a solid foundation — and I think we could have a lot more fun if we were more open about what we each want to try. I have some ideas. Do you?"',tip:'Lead with appreciation for what you have before expressing what you want more of.',when:'A playful relaxed moment. Keep the energy light — this is an invitation, not a negotiation.'},
+  afterfight:{sit:'Reconnecting after a fight',ctx:'Physical reconnection supports emotional repair — but only when both people are ready.',open:'"I do not want to go to bed still feeling like this between us. Can we just be close for a minute? We do not need to fix everything tonight."',core:'"I love you even when we fight. I just want to feel close to you again right now. Nothing else needs to be resolved tonight."',tip:'Do not use this as an opening for the argument to continue. Connection only — issues wait for tomorrow.',when:'After the immediate heat has passed and both of you have had space.'}
+};
+
+function spinPos(){
+  if(AC.state==='suspended')AC.resume();
+  playSpin();
+  let idx;
+  do{idx=Math.floor(Math.random()*positions.length);}while(idx===lastPos&&positions.length>1);
+  lastPos=idx;
+  const p=positions[idx];
+  document.getElementById('pos-out').innerHTML=`<div class="card" style="animation:spinIn .5s cubic-bezier(.22,1,.36,1) forwards"><span class="tag">${p.tag}</span><div class="sil-wrap">${p.svg}</div><p class="pos-title">${p.name}</p><p class="pos-meta">Difficulty — ${p.diff}</p><p class="pos-sec">Benefit</p><p class="pos-txt">${p.benefit}</p><p class="pos-sec">How to</p><p class="pos-txt">${p.instructions}</p><p class="pos-sec">Best for</p><p class="pos-txt">${p.context}</p></div>`;
+}
+
+function selMood(el,m){
+  if(AC.state==='suspended')AC.resume();
+  playClick();
+  mood=m;
+  document.querySelectorAll('.mood-opt').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('btn-mood').disabled=false;
+}
+
+function showAct(){
+  if(!mood)return;
+  if(AC.state==='suspended')AC.resume();
+  playReveal();
+  const list=activities[mood];
+  let idx;
+  do{idx=Math.floor(Math.random()*list.length);}while(idx===lastAct[mood]&&list.length>1);
+  lastAct[mood]=idx;
+  const a=list[idx];
+  const steps=a.steps.map((s,i)=>`<li><span class="sn">${i+1}</span><span>${s}</span></li>`).join('');
+  document.getElementById('act-out').innerHTML=`<div class="act-card"><span class="tag">${mood}</span><p class="act-title">${a.title}</p><ul class="steps">${steps}</ul></div>`;
+  go(3);
+}
+
+function renderGuide(tab){
+  document.getElementById('guide-list').innerHTML=guides[tab].map((g,i)=>`<div class="gi" onclick="showGD(${i})"><p class="gi-t">${g.title}</p><p class="gi-s">${g.sub}</p></div>`).join('');
+}
+
+function switchGuide(tab){
+  if(AC.state==='suspended')AC.resume();
+  playClick();
+  guideTab=tab;
+  document.getElementById('tab-him').classList.toggle('act',tab==='him');
+  document.getElementById('tab-her').classList.toggle('act',tab==='her');
+  renderGuide(tab);
+}
+
+function showGD(i){
+  if(AC.state==='suspended')AC.resume();
+  playReveal();
+  const g=guides[guideTab][i];
+  const zones=g.zones.map(z=>`<span class="zone-chip">${z}</span>`).join('');
+  document.getElementById('gd-out').innerHTML=`<div class="gd"><p class="gd-t">${g.title}</p><p style="font-size:11px;color:var(--text3);margin-bottom:1rem;letter-spacing:.1em">${g.sub}</p><div style="margin-bottom:1rem">${zones}</div><p style="font-size:14px;color:var(--text2);line-height:1.7;font-weight:300">${g.body}</p><div class="tip-box"><p class="tip-lbl">Key tip</p><p class="tip-txt">${g.tip}</p></div></div>`;
+  go(5);
+}
+
+function selScen(el,s){
+  if(AC.state==='suspended')AC.resume();
+  playClick();
+  scen=s;
+  document.querySelectorAll('.scen-opt').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('btn-scen').disabled=false;
+}
+
+function showBridge(){
+  if(!scen)return;
+  if(AC.state==='suspended')AC.resume();
+  playReveal();
+  const b=bridges[scen];
+  document.getElementById('bridge-out').innerHTML=`<div class="card" style="margin-bottom:1rem"><p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--text);margin-bottom:.5rem">${b.sit}</p><p style="font-size:14px;color:var(--text2);line-height:1.7;font-weight:300">${b.ctx}</p></div><div class="script-box"><p class="script-lbl">How to open</p><p class="script-txt">${b.open}</p></div><div class="script-box"><p class="script-lbl">What to say</p><p class="script-txt">${b.core}</p></div><div class="ib"><p class="it">Key tip</p><p class="ix">${b.tip}</p></div><div class="ib"><p class="it">When to have this</p><p class="ix">${b.when}</p></div>`;
+  go(7);
+}
+
+renderGuide('him');
+</script>
+</body>
+</html>
